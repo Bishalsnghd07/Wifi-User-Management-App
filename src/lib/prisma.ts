@@ -1,12 +1,11 @@
-import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
-// Resolve absolute path dynamically for Vercel Serverless environment
-const dbPath = path.join(process.cwd(), "prisma", "dev.db");
+const isProduction = process.env.NODE_ENV === "production";
 
 const adapter = new PrismaLibSql({
-  url: `file:${dbPath}`,
+  url: isProduction ? process.env.TURSO_DATABASE_URL! : "file:prisma/dev.db",
+  authToken: isProduction ? process.env.TURSO_AUTH_TOKEN : undefined,
 });
 
 const globalForPrisma = globalThis as unknown as {
@@ -15,4 +14,4 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (!isProduction) globalForPrisma.prisma = prisma;
