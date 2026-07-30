@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum DeviceStatus {
+  ONLINE
+  OFFLINE
+  BLOCKED
+}
+
+model User {
+  id          String      @id @default(uuid())
+  name        String
+  email       String      @unique
+  mobile      String      @unique
+  companyName String
+  password    String?
+  otpCode     String?
+  kycStatus   KycStatus   @default(PENDING)
+  kycDocType  String?
+  kycDocUrl   String?
+  createdAt   DateTime    @default(now())
+
+  devices     Device[]
+  usageLogs   UsageLog[]
+}
+
+model Device {
+  id           String       @id @default(uuid())
+  userId       String
+  deviceName   String
+  deviceType   String
+  macAddress   String       @unique
+  status       DeviceStatus @default(ONLINE)
+  registeredAt DateTime     @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UsageLog {
+  id           String   @id @default(uuid())
+  userId       String
+  dataMB       Float
+  sessionTime  Int
+  lastActive   DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
