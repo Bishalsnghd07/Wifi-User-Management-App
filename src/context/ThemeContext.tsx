@@ -18,7 +18,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const savedTheme = localStorage.getItem("wifi_theme") as Theme;
     if (savedTheme) {
-      setTheme(savedTheme);
+      requestAnimationFrame(() => {
+        setTheme(savedTheme);
+      });
     }
   }, []);
 

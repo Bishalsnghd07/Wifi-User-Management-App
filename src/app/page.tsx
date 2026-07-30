@@ -54,7 +54,7 @@ export default function AuthPage() {
       } else {
         setError(data.error || "Verification failed");
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Server Error! Kripya phir se try karein.");
     } finally {
       setLoading(false);

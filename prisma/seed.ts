@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
+declare const process: {
+  exit(code?: number): never;
+};
+
 const adapter = new PrismaLibSql({
   url: "file:prisma/dev.db",
 });

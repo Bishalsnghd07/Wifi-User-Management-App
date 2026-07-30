@@ -64,7 +64,7 @@ export async function GET(req: Request) {
       devices: user.devices,
       chartData,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: false, error: "Failed to fetch dashboard metrics" },
       { status: 500 },

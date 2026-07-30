@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       message: "KYC Document verified successfully!",
       user,
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: false, error: "KYC verification failed" },
       { status: 500 },

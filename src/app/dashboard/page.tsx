@@ -91,7 +91,9 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchDashboard();
+    requestAnimationFrame(() => {
+      fetchDashboard();
+    });
   }, []);
 
   const handleToggleStatus = async (
@@ -139,7 +141,7 @@ export default function DashboardPage() {
       } else {
         setAddError(result.error || "Failed to add device");
       }
-    } catch (err) {
+    } catch (_err) {
       setAddError("Server error while adding device");
     }
   };

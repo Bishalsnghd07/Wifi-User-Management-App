@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({ success: true, devices });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: false, error: "Failed to fetch devices" },
       { status: 500 },
@@ -44,8 +44,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, device });
-  } catch (error: any) {
-    if (error.code === "P2002") {
+  } catch (_error: unknown) {
+    if ((_error as { code: string }).code === "P2002") {
       return NextResponse.json(
         { success: false, error: "MAC Address is already registered" },
         { status: 400 },
@@ -69,7 +69,7 @@ export async function PATCH(req: Request) {
     });
 
     return NextResponse.json({ success: true, device });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { success: false, error: "Failed to update device status" },
       { status: 500 },
