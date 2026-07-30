@@ -1,9 +1,16 @@
+import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { createClient } from "@libsql/client";
 
-const adapter = new PrismaLibSql({
-  url: "file:prisma/dev.db",
+// Absolute path resolution for Vercel Serverless environment
+const dbPath = path.join(process.cwd(), "prisma", "dev.db");
+
+const libsql = createClient({
+  url: `file:${dbPath}`,
 });
+
+const adapter = new PrismaLibSql(libsql);
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
