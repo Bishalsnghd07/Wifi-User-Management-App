@@ -76,10 +76,44 @@ export default function DashboardPage() {
     router.push("/");
   };
 
+  // const fetchDashboard = async () => {
+  //   try {
+  //     const res = await fetch("/api/dashboard");
+  //     const result = await res.json();
+  //     if (result.success) {
+  //       setData(result);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error fetching dashboard data:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchDashboard = async () => {
     try {
-      const res = await fetch("/api/dashboard");
+      // 1. LocalStorage se logged-in user get karein
+      const storedUser = localStorage.getItem("wifi_user");
+
+      if (!storedUser) {
+        router.push("/"); // User logged in nahi hai toh login page par bhejen
+        return;
+      }
+
+      const parsedUser = JSON.parse(storedUser);
+      // User object direct ho sakta hai ya { user: { id: ... } } structure me
+      const userId = parsedUser.id || parsedUser.user?.id || parsedUser._id;
+
+      if (!userId) {
+        console.error("User ID not found in localStorage");
+        setLoading(false);
+        return;
+      }
+
+      // 2. API query parameter mein userId send karein
+      const res = await fetch(`/api/dashboard?userId=${userId}`);
       const result = await res.json();
+
       if (result.success) {
         setData(result);
       }
